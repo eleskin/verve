@@ -1,5 +1,5 @@
 abstract class Component {
-	protected constructor() {
+	protected constructor(props) {
 	}
 	
 	
