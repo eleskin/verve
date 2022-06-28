@@ -16,7 +16,7 @@ export default class Button extends Component {
 				click: this.props.buttonClickHandler,
 			},
 			children: [
-				Verve.createText({value: 'Добавить единицу'}),
+				Verve.createText({value: this.props.textValue}),
 			],
 		});
 	}

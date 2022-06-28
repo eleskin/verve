@@ -2,6 +2,7 @@ import Component from '../verve/Component';
 import Counter from './components/Counter/Counter';
 import Button from './components/Button/Button';
 import Verve from '../verve/Verve';
+import Switcher from './components/Switcher/Switcher';
 
 export default class App extends Component {
 	private readonly store;
@@ -29,7 +30,12 @@ export default class App extends Component {
 			handlers: {},
 			children: [
 				new Counter({value: this.store.getState().count}).render(),
-				new Button({buttonClickHandler: this.buttonClickHandler}).render(),
+				new Button({
+					value: this.store.getState().count,
+					buttonClickHandler: this.buttonClickHandler,
+					textValue: this.store.getState().count % 2 ? 'Нечётное' : 'Чётное'
+				}).render(),
+				new Switcher({}).render()
 			],
 		});
 	}
