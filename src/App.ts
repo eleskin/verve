@@ -3,10 +3,12 @@ import Counter from './components/Counter/Counter';
 import Button from './components/Button/Button';
 import Verve from '../verve/Verve';
 import Switcher from './components/Switcher/Switcher';
+import Form from './components/Form/Form';
 
 export default class App extends Component {
 	private readonly store;
 	private readonly SwitcherComponent;
+	private readonly FormComponent;
 	
 	constructor(props) {
 		super(props);
@@ -16,6 +18,7 @@ export default class App extends Component {
 		});
 		
 		this.SwitcherComponent = new Switcher({});
+		this.FormComponent = new Form({});
 		
 		this.buttonClickHandler = this.buttonClickHandler.bind(this);
 	}
@@ -39,6 +42,7 @@ export default class App extends Component {
 					textValue: this.store.getState().count % 2 ? 'Нечётное' : 'Чётное',
 				}).render(),
 				this.SwitcherComponent.render(),
+				this.FormComponent.render(),
 			],
 		});
 	}
