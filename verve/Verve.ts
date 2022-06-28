@@ -15,28 +15,28 @@ export default class Verve {
 		if (Object.entries(object1.handlers).length !== Object.entries(object2.handlers).length) isEqual = false;
 		if (object1.children.length !== object2.children.length) isEqual = false;
 		
-		Object.entries(object1.attributes).forEach((attribute, index) => {
-			const [attributeName1, attributeValue1] = attribute;
-			const [attributeName2, attributeValue2] = Object.entries(object2.attributes)[index];
+		for (let count = Object.entries(object1.attributes).length - 1; count >= 0; count--) {
+			const [attributeName1, attributeValue1] = Object.entries(object1.attributes)[count];
+			const [attributeName2, attributeValue2] = Object.entries(object2.attributes)[count];
 			
 			if (attributeName1 !== attributeName2) isEqual = false;
 			if (attributeValue1 !== attributeValue2) isEqual = false;
-		});
+		}
 		
-		Object.entries(object1.handlers).forEach((handler, index) => {
-			const [handlerName1, handlerValue1] = handler;
-			const [handlerName2, handlerValue2] = Object.entries(object2.handlers)[index];
+		for (let count = Object.entries(object1.handlers).length - 1; count >= 0; count--) {
+			const [handlerName1, handlerValue1] = Object.entries(object1.handlers)[count];
+			const [handlerName2, handlerValue2] = Object.entries(object2.handlers)[count];
 			
 			if (handlerName1 !== handlerName2) isEqual = false;
 			if (handlerValue1 !== handlerValue2) isEqual = false;
-		});
+		}
 		
-		object1.children.forEach((child, index) => {
-			const objectChild1 = child;
-			const objectChild2 = object2.children[index];
+		for (let count = object1.children.length - 1; count >= 0; count--) {
+			const objectChild1 = object1.children[count];
+			const objectChild2 = object2.children[count];
 			
 			if (!this.deepEqual(objectChild1, objectChild2)) isEqual = this.deepEqual(objectChild1, objectChild2);
-		});
+		}
 		
 		return isEqual;
 	}
@@ -66,26 +66,30 @@ export default class Verve {
 		this._symbols.push({symbol: virtualDOM.symbol, element});
 		
 		const attributes = Object.entries(virtualDOM.attributes);
-		attributes.forEach(([attributeName, attributeValue]) => {
+		for (let count = attributes.length - 1; count >= 0; count--) {
+			const [attributeName, attributeValue] = attributes[count];
+			
 			element.setAttribute(attributeName, attributeValue);
-		});
+		}
 		
 		const handlers = Object.entries(virtualDOM.handlers);
-		handlers.forEach(([handlerName, handlerValue]) => {
-			element.addEventListener(handlerName, handlerValue);
-		});
+		for (let count = handlers.length - 1; count >= 0; count--) {
+			const [handlerName, handlerValue] = handlers[count];
+			
+			element.setAttribute(handlerName, handlerValue);
+		}
 		
 		const children = virtualDOM.children;
-		children.forEach((child) => {
-			if (child.tagName === '#text') {
-				const textElement = document.createTextNode(child.value);
+		for (let count = children.length - 1; count >= 0; count--) {
+			if (children[count].tagName === '#text') {
+				const textElement = document.createTextNode(children[count].value);
 				element.append(textElement);
-				this._symbols.push({symbol: child.symbol, element: textElement});
+				this._symbols.push({symbol: children[count].symbol, element: textElement});
 			} else {
-				const node = this.generateDOM(child);
+				const node = this.generateDOM(children[count]);
 				element.append(node);
 			}
-		});
+		}
 		
 		return element;
 	}
