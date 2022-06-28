@@ -68,19 +68,17 @@ export default class Verve {
 		const attributes = Object.entries(virtualDOM.attributes);
 		for (let count = attributes.length - 1; count >= 0; count--) {
 			const [attributeName, attributeValue] = attributes[count];
-			
 			element.setAttribute(attributeName, attributeValue);
 		}
 		
 		const handlers = Object.entries(virtualDOM.handlers);
 		for (let count = handlers.length - 1; count >= 0; count--) {
 			const [handlerName, handlerValue] = handlers[count];
-			
-			element.setAttribute(handlerName, handlerValue);
+			element.addEventListener(handlerName, handlerValue);
 		}
 		
 		const children = virtualDOM.children;
-		for (let count = children.length - 1; count >= 0; count--) {
+		for (let count = 0; count < children.length; count++) {
 			if (children[count].tagName === '#text') {
 				const textElement = document.createTextNode(children[count].value);
 				element.append(textElement);
