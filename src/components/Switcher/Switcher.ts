@@ -17,6 +17,7 @@ export default class Switcher extends Component {
 	
 	buttonClickHandler() {
 		this.store.setState({...this.store.getState(), isLarge: !this.store.getState().isLarge});
+		console.log(this.store.getState().isLarge)
 	}
 	
 	render() {

@@ -6,6 +6,7 @@ import Switcher from './components/Switcher/Switcher';
 
 export default class App extends Component {
 	private readonly store;
+	private readonly SwitcherComponent;
 	
 	constructor(props) {
 		super(props);
@@ -13,6 +14,8 @@ export default class App extends Component {
 		this.store = Verve.createStore({
 			count: 0,
 		});
+		
+		this.SwitcherComponent = new Switcher({});
 		
 		this.buttonClickHandler = this.buttonClickHandler.bind(this);
 	}
@@ -25,7 +28,7 @@ export default class App extends Component {
 		return Verve.createNode({
 			tagName: 'div',
 			attributes: {
-				class: 'App'
+				class: 'App',
 			},
 			handlers: {},
 			children: [
@@ -33,9 +36,9 @@ export default class App extends Component {
 				new Button({
 					value: this.store.getState().count,
 					buttonClickHandler: this.buttonClickHandler,
-					textValue: this.store.getState().count % 2 ? 'Нечётное' : 'Чётное'
+					textValue: this.store.getState().count % 2 ? 'Нечётное' : 'Чётное',
 				}).render(),
-				new Switcher({}).render()
+				this.SwitcherComponent.render(),
 			],
 		});
 	}
