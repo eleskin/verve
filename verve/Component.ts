@@ -1,10 +1,14 @@
+import {IComponentNode, IComponentText, IProps} from './interfaces';
+import Verve from './Verve';
+
 export default class Component {
-	protected readonly props;
+	protected readonly props: IProps;
 	
-	constructor(props) {
+	constructor(props: IProps) {
 		this.props = props;
 	}
 	
-	render() {
+	render(): IComponentNode | IComponentText {
+		return Verve.createText({value: 'Hello, Verve'});
 	}
 }

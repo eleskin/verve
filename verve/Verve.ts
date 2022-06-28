@@ -1,12 +1,15 @@
+import Component from './Component';
+import {IComponentNode, IObject} from './interfaces';
+
 export default class Verve {
-	private static _component;
-	private static _selector;
-	private static _prevDOMState;
+	private static _component: Component;
+	private static _selector: string;
+	private static _prevDOMState: IComponentNode;
 	private static _symbols = [];
-	private static _symbolsIndex = 0;
+	private static _symbolsIndex: number = 0;
 	
-	private static deepEqualNode(object1, object2) {
-		let isEqual = true;
+	private static deepEqualNode(object1: IObject, object2: IObject) {
+		let isEqual: boolean = true;
 		
 		if (Object.entries(object1.attributes).length !== Object.entries(object2.attributes).length) isEqual = false;
 		if (Object.entries(object1.handlers).length !== Object.entries(object2.handlers).length) isEqual = false;

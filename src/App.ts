@@ -4,13 +4,14 @@ import Button from './components/Button/Button';
 import Verve from '../verve/Verve';
 import Switcher from './components/Switcher/Switcher';
 import Form from './components/Form/Form';
+import {IComponentNode, IProps, IStore} from '../verve/interfaces';
 
 export default class App extends Component {
-	private readonly store;
-	private readonly SwitcherComponent;
-	private readonly FormComponent;
+	private readonly store: IStore;
+	private readonly SwitcherComponent: Switcher;
+	private readonly FormComponent: Form;
 	
-	constructor(props) {
+	constructor(props: IProps) {
 		super(props);
 		
 		this.store = Verve.createStore({
@@ -23,11 +24,11 @@ export default class App extends Component {
 		this.buttonClickHandler = this.buttonClickHandler.bind(this);
 	}
 	
-	buttonClickHandler() {
+	buttonClickHandler(): void {
 		this.store.setState({...this.store.getState(), count: this.store.getState().count + 1});
 	}
 	
-	render() {
+	render(): IComponentNode {
 		return Verve.createNode({
 			tagName: 'div',
 			attributes: {

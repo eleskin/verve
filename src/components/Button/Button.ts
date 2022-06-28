@@ -1,12 +1,13 @@
 import Component from '../../../verve/Component';
 import Verve from '../../../verve/Verve';
+import {IComponentNode, IProps} from '../../../verve/interfaces';
 
 export default class Button extends Component {
-	constructor(props) {
+	constructor(props: IProps) {
 		super(props);
 	}
 	
-	render() {
+	render(): IComponentNode {
 		return Verve.createNode({
 			tagName: 'button',
 			attributes: {

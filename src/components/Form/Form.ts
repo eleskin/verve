@@ -1,10 +1,11 @@
 import Component from '../../../verve/Component';
 import Verve from '../../../verve/Verve';
+import {IComponentNode, IProps, IStore} from '../../../verve/interfaces';
 
 export default class Form extends Component {
-	private readonly store;
+	private readonly store: IStore;
 	
-	constructor(props) {
+	constructor(props: IProps) {
 		super(props);
 		
 		this.store = Verve.createStore({
@@ -14,11 +15,11 @@ export default class Form extends Component {
 		this.inputChangeHandler = this.inputChangeHandler.bind(this);
 	}
 	
-	inputChangeHandler(event) {
+	inputChangeHandler(event: Event | any): void {
 		this.store.setState({...this.store.getState(), inputValue: event.target.value});
 	}
 	
-	render() {
+	render(): IComponentNode {
 		return Verve.createNode({
 			tagName: 'form',
 			attributes: {},
