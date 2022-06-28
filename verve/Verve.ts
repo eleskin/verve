@@ -2,6 +2,8 @@ export default class Verve {
 	private static _component;
 	private static _selector;
 	private static _prevDOMState;
+	private static _symbols = [];
+	private static _symbolsIndex = 0;
 	
 	private static deepEqualNode(object1, object2) {
 		let isEqual = true;
@@ -41,6 +43,11 @@ export default class Verve {
 		
 		if (object1.value !== object2.value) isEqual = false;
 		
+		if (!isEqual) {
+			const [changedElement] = this._symbols.filter((element) => element.symbol === object1.symbol);
+			changedElement.element.nodeValue = object2.value;
+		}
+		
 		return isEqual;
 	}
 	
@@ -52,6 +59,8 @@ export default class Verve {
 	
 	public static generateDOM(virtualDOM) {
 		const element = document.createElement(virtualDOM.tagName);
+		
+		this._symbols.push({symbol: virtualDOM.symbol, element});
 		
 		const attributes = Object.entries(virtualDOM.attributes);
 		attributes.forEach(([attributeName, attributeValue]) => {
@@ -66,9 +75,12 @@ export default class Verve {
 		const children = virtualDOM.children;
 		children.forEach((child) => {
 			if (child.tagName === '#text') {
-				element.append(document.createTextNode(child.value));
+				const textElement = document.createTextNode(child.value);
+				element.append(textElement);
+				this._symbols.push({symbol: child.symbol, element: textElement});
 			} else {
-				element.append(this.generateDOM(child));
+				const node = this.generateDOM(child);
+				element.append(node);
 			}
 		});
 		
@@ -81,12 +93,12 @@ export default class Verve {
 	}
 	
 	public static rerender(virtualDOM) {
+		this._symbolsIndex = 0;
 		const renderedState = virtualDOM.render();
 		const isEqualDOM = this.deepEqual(this._prevDOMState, renderedState);
 		
 		if (!isEqualDOM) {
 			this._prevDOMState = renderedState;
-			console.log(this._prevDOMState);
 		}
 	}
 	
@@ -95,7 +107,7 @@ export default class Verve {
 		this._selector = selector;
 		this._prevDOMState = component.render();
 		
-		const DOM = this.generateDOM(component.render());
+		const DOM = this.generateDOM(this._prevDOMState);
 		
 		this.mountDOM(DOM);
 		
@@ -103,11 +115,11 @@ export default class Verve {
 	}
 	
 	public static createNode({tagName, attributes, handlers, children}) {
-		return {tagName, attributes, handlers, children};
+		return {symbol: this._symbolsIndex++, tagName, attributes, handlers, children};
 	}
 	
 	public static createText({value}) {
-		return {tagName: '#text', value};
+		return {symbol: this._symbolsIndex++, tagName: '#text', value};
 	}
 	
 	public static createStore(initialState) {
