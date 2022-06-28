@@ -1,4 +1,6 @@
-import Verve from '../verve/Verve';
 import App from './App';
+import Verve from '../verve/Verve';
 
-Verve.render('#root', App)
+const app = Verve.render('#root', new App({}));
+
+// app.children[1].handlers.click();

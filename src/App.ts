@@ -1,36 +1,36 @@
 import Component from '../verve/Component';
-import Verve from '../verve/Verve';
 import Counter from './components/Counter/Counter';
+import Button from './components/Button/Button';
+import Verve from '../verve/Verve';
 
-class App extends Component {
-	store;
+export default class App extends Component {
+	private readonly store;
 	
 	constructor(props) {
 		super(props);
 		
 		this.store = Verve.createStore({
-			value: 0,
+			count: 0,
 		});
+		
+		this.buttonClickHandler = this.buttonClickHandler.bind(this);
+	}
+	
+	buttonClickHandler() {
+		this.store.setState({...this.store.getState(), count: this.store.getState().count + 1});
 	}
 	
 	render() {
-		return Verve.createNode(
-			'div',
-			{
-				class: 'text',
-				style: 'border: 1px solid #000',
+		return Verve.createNode({
+			tagName: 'div',
+			attributes: {
+				class: 'App'
 			},
-			{},
-			[
-				new Counter({
-					value: this.store.value, setValue: () => {
-						this.store.value += 1;
-						console.log(this.store.value);
-					},
-				}),
+			handlers: {},
+			children: [
+				new Counter({value: this.store.getState().count}).render(),
+				new Button({buttonClickHandler: this.buttonClickHandler}).render(),
 			],
-		);
+		});
 	}
 }
-
-export default App;

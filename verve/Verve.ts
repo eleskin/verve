@@ -1,58 +1,125 @@
-import Component from './Component';
-
-class Verve {
-	private static rootComponent;
-	private static rootSelector;
+export default class Verve {
+	private static _component;
+	private static _selector;
+	private static _prevDOMState;
 	
-	static render(selector: string, component) {
-		const element: HTMLElement = document.querySelector(selector);
-		const renderedComponent = (new component).render();
+	private static deepEqualNode(object1, object2) {
+		let isEqual = true;
 		
-		element.innerText = '';
+		if (Object.entries(object1.attributes).length !== Object.entries(object2.attributes).length) isEqual = false;
+		if (Object.entries(object1.handlers).length !== Object.entries(object2.handlers).length) isEqual = false;
+		if (object1.children.length !== object2.children.length) isEqual = false;
 		
-		this.rootSelector = selector;
-		this.rootComponent = component;
+		Object.entries(object1.attributes).forEach((attribute, index) => {
+			const [attributeName1, attributeValue1] = attribute;
+			const [attributeName2, attributeValue2] = Object.entries(object2.attributes)[index];
+			
+			if (attributeName1 !== attributeName2) isEqual = false;
+			if (attributeValue1 !== attributeValue2) isEqual = false;
+		});
 		
-		element.append(renderedComponent);
+		Object.entries(object1.handlers).forEach((handler, index) => {
+			const [handlerName1, handlerValue1] = handler;
+			const [handlerName2, handlerValue2] = Object.entries(object2.handlers)[index];
+			
+			if (handlerName1 !== handlerName2) isEqual = false;
+			if (handlerValue1 !== handlerValue2) isEqual = false;
+		});
+		
+		object1.children.forEach((child, index) => {
+			const objectChild1 = child;
+			const objectChild2 = object2.children[index];
+			
+			if (!this.deepEqual(objectChild1, objectChild2)) isEqual = this.deepEqual(objectChild1, objectChild2);
+		});
+		
+		return isEqual;
 	}
 	
-	static createNode(tagName, attributes, handlers, children) {
-		const element = document.createElement(tagName);
+	private static deepEqualTextNode(object1, object2) {
+		let isEqual = true;
 		
-		Object.entries(attributes).forEach((attribute) => {
-			const [attributeName, attributeValue] = attribute;
-			
+		if (object1.value !== object2.value) isEqual = false;
+		
+		return isEqual;
+	}
+	
+	private static deepEqual(object1, object2) {
+		if (object1.tagName !== object2.tagName) return false;
+		
+		return object1.tagName === '#text' ? this.deepEqualTextNode(object1, object2) : this.deepEqualNode(object1, object2);
+	}
+	
+	public static generateDOM(virtualDOM) {
+		const element = document.createElement(virtualDOM.tagName);
+		
+		const attributes = Object.entries(virtualDOM.attributes);
+		attributes.forEach(([attributeName, attributeValue]) => {
 			element.setAttribute(attributeName, attributeValue);
 		});
 		
-		Object.entries(handlers).forEach((handler) => {
-			const [handlerName, handlerValue] = handler;
-			
+		const handlers = Object.entries(virtualDOM.handlers);
+		handlers.forEach(([handlerName, handlerValue]) => {
 			element.addEventListener(handlerName, handlerValue);
 		});
 		
+		const children = virtualDOM.children;
 		children.forEach((child) => {
-			if (child instanceof Component) {
-				element.append(child.render());
+			if (child.tagName === '#text') {
+				element.append(document.createTextNode(child.value));
 			} else {
-				element.append(child);
+				element.append(this.generateDOM(child));
 			}
 		});
 		
 		return element;
 	}
 	
-	static createStore(initialState) {
-		return new Proxy(initialState, {
-			get(target, prop: any, receiver) {
-				return Reflect.get(target, prop, receiver); // (1)
+	public static mountDOM(DOM) {
+		const element = document.querySelector(this._selector);
+		element.append(DOM);
+	}
+	
+	public static rerender(virtualDOM) {
+		const renderedState = virtualDOM.render();
+		const isEqualDOM = this.deepEqual(this._prevDOMState, renderedState);
+		
+		if (!isEqualDOM) {
+			this._prevDOMState = renderedState;
+			console.log(this._prevDOMState);
+		}
+	}
+	
+	public static render(selector, component) {
+		this._component = component;
+		this._selector = selector;
+		this._prevDOMState = component.render();
+		
+		const DOM = this.generateDOM(component.render());
+		
+		this.mountDOM(DOM);
+		
+		return component.render();
+	}
+	
+	public static createNode({tagName, attributes, handlers, children}) {
+		return {tagName, attributes, handlers, children};
+	}
+	
+	public static createText({value}) {
+		return {tagName: '#text', value};
+	}
+	
+	public static createStore(initialState) {
+		let state = initialState;
+		
+		return {
+			getState: () => state,
+			setState: (newState) => {
+				state = newState;
+				this.rerender(this._component);
+				return state;
 			},
-			set: (target, prop: any, val, receiver) => {
-				this.render(this.rootSelector, this.rootComponent);
-				return Reflect.set(target, prop, val, receiver); // (2)
-			},
-		});
+		};
 	}
 }
-
-export default Verve;

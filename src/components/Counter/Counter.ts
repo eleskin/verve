@@ -1,34 +1,12 @@
 import Component from '../../../verve/Component';
 import Verve from '../../../verve/Verve';
 
-class Counter extends Component {
-	props;
-	
+export default class Counter extends Component {
 	constructor(props) {
 		super(props);
-		this.props = props;
 	}
 	
 	render() {
-		return Verve.createNode(
-			'output',
-			{},
-			{},
-			[
-				this.props.value,
-				Verve.createNode(
-					'button',
-					{},
-					{
-						click: this.props.setValue
-					},
-					[
-						'+1'
-					]
-				)
-			]
-		);
+		return Verve.createText({value: this.props.value});
 	}
 }
-
-export default Counter;
