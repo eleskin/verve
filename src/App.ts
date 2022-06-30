@@ -5,11 +5,13 @@ import Verve from '../verve/Verve';
 import Switcher from './components/Switcher/Switcher';
 import Form from './components/Form/Form';
 import {IComponentNode, IProps, IStore} from '../verve/interfaces';
+import Todo from './components/Todo/Todo';
 
 export default class App extends Component {
 	private readonly store: IStore;
 	private readonly SwitcherComponent: Switcher;
 	private readonly FormComponent: Form;
+	private readonly TodoComponent: Todo;
 	
 	constructor(props: IProps) {
 		super(props);
@@ -20,6 +22,7 @@ export default class App extends Component {
 		
 		this.SwitcherComponent = new Switcher({});
 		this.FormComponent = new Form({});
+		this.TodoComponent = new Todo({});
 		
 		this.buttonClickHandler = this.buttonClickHandler.bind(this);
 	}
@@ -44,6 +47,7 @@ export default class App extends Component {
 				}).render(),
 				this.SwitcherComponent.render(),
 				this.FormComponent.render(),
+				this.TodoComponent.render()
 			],
 		});
 	}
