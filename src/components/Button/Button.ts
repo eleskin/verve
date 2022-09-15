@@ -1,5 +1,5 @@
 import Component from '../../../verve/Component';
-import Verve from '../../../verve/Verve';
+import { createNode, createText } from '../../../verve/Verve';
 import {IComponentNode, IProps} from '../../../verve/interfaces';
 
 export default class Button extends Component {
@@ -8,7 +8,7 @@ export default class Button extends Component {
 	}
 	
 	render(): IComponentNode {
-		return Verve.createNode({
+		return createNode({
 			tagName: 'button',
 			attributes: {
 				class: 'button',
@@ -17,7 +17,7 @@ export default class Button extends Component {
 				click: this.props.buttonClickHandler,
 			},
 			children: [
-				Verve.createText({value: this.props.textValue}),
+				createText({value: this.props.textValue}),
 			],
 		});
 	}

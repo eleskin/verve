@@ -1,5 +1,5 @@
 import Component from '../../../verve/Component';
-import Verve from '../../../verve/Verve';
+import { createNode, createStore, createText } from '../../../verve/Verve';
 import Button from '../Button/Button';
 import {IComponentNode, IProps, IStore} from '../../../verve/interfaces';
 
@@ -9,7 +9,7 @@ export default class Switcher extends Component {
 	constructor(props: IProps) {
 		super(props);
 		
-		this.store = Verve.createStore({
+		this.store = createStore({
 			isLarge: false,
 		});
 		
@@ -21,15 +21,15 @@ export default class Switcher extends Component {
 	}
 	
 	render(): IComponentNode {
-		return Verve.createNode({
+		return createNode({
 			tagName: 'div',
 			attributes: {},
 			handlers: {},
 			children: [
 				new Button({textValue: 'Переключить', buttonClickHandler: this.buttonClickHandler}).render(),
 				this.store.getState().isLarge ?
-					Verve.createText({value: 'Большой текст'}) :
-					Verve.createText({value: 'Маленький текст'}),
+					createText({value: 'Большой текст'}) :
+					createText({value: 'Маленький текст'}),
 			],
 		});
 	}

@@ -60,7 +60,7 @@ export default class Verve {
 		return object1.tagName === '#text' ? this.deepEqualTextNode(object1, object2) : this.deepEqualNode(object1, object2);
 	}
 	
-	public static generateDOM(virtualDOM) {
+	private static generateDOM(virtualDOM) {
 		const element = document.createElement(virtualDOM.tagName);
 		
 		this._symbols.push({symbol: virtualDOM.symbol, element});
@@ -90,12 +90,12 @@ export default class Verve {
 		return element;
 	}
 	
-	public static mountDOM(DOM) {
+	private static mountDOM(DOM) {
 		const element = document.querySelector(this._selector);
 		element.append(DOM);
 	}
 	
-	public static rerender(virtualDOM) {
+	private static rerender(virtualDOM) {
 		this._symbolsIndex = 0;
 		const renderedState = virtualDOM.render();
 		const isEqualDOM = this.deepEqual(this._prevDOMState, renderedState);
@@ -118,6 +118,7 @@ export default class Verve {
 	}
 	
 	public static createNode({tagName, attributes, handlers, children}) {
+		console.log(children);
 		return {symbol: this._symbolsIndex++, tagName, attributes, handlers, children};
 	}
 	
@@ -138,3 +139,11 @@ export default class Verve {
 		};
 	}
 }
+
+export const render = (selector, component) => Verve.render(selector, component);
+
+export const createNode = ({tagName, attributes, handlers, children}) => Verve.createNode({tagName, attributes, handlers, children});
+
+export const createText = ({value}) => Verve.createText({value});
+
+export const createStore = (initialState) => Verve.createStore(initialState);

@@ -1,4 +1,4 @@
 import App from './App';
-import Verve from '../verve/Verve';
+import { render } from '../verve/Verve';
 
-Verve.render('#root', new App({}));
+render('#root', new App({}));

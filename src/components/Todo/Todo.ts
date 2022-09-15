@@ -1,6 +1,6 @@
 import Component from '../../../verve/Component';
 import {IComponentNode} from '../../../verve/interfaces';
-import Verve from '../../../verve/Verve';
+import { createNode, createText } from '../../../verve/Verve';
 
 export default class Todo extends Component {
 	constructor(props) {
@@ -8,7 +8,7 @@ export default class Todo extends Component {
 	}
 	
 	render(): IComponentNode {
-		return Verve.createNode({
+		return createNode({
 			tagName: 'div',
 			attributes: {
 				class: 'Todo',
@@ -16,7 +16,7 @@ export default class Todo extends Component {
 			},
 			handlers: {},
 			children: [
-				Verve.createText({value: 'Todo'})
+				createText({value: 'Todo'})
 			]
 		});
 	}

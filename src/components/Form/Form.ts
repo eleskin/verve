@@ -1,5 +1,5 @@
 import Component from '../../../verve/Component';
-import Verve from '../../../verve/Verve';
+import { createNode, createStore, createText } from '../../../verve/Verve';
 import {IComponentNode, IProps, IStore} from '../../../verve/interfaces';
 
 export default class Form extends Component {
@@ -8,7 +8,7 @@ export default class Form extends Component {
 	constructor(props: IProps) {
 		super(props);
 		
-		this.store = Verve.createStore({
+		this.store = createStore({
 			inputValue: '',
 		});
 		
@@ -20,12 +20,12 @@ export default class Form extends Component {
 	}
 	
 	render(): IComponentNode {
-		return Verve.createNode({
+		return createNode({
 			tagName: 'form',
 			attributes: {},
 			handlers: {},
 			children: [
-				Verve.createNode({
+				createNode({
 					tagName: 'input',
 					attributes: {},
 					handlers: {
@@ -33,12 +33,12 @@ export default class Form extends Component {
 					},
 					children: [],
 				}),
-				Verve.createNode({
+				createNode({
 					tagName: 'span',
 					attributes: {},
 					handlers: {},
 					children: [
-						Verve.createText({value: this.store.getState().inputValue}),
+						createText({value: this.store.getState().inputValue}),
 					],
 				}),
 			],

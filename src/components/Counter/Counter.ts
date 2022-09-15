@@ -1,5 +1,5 @@
 import Component from '../../../verve/Component';
-import Verve from '../../../verve/Verve';
+import { createText } from '../../../verve/Verve';
 import {IComponentText, IProps} from '../../../verve/interfaces';
 
 export default class Counter extends Component {
@@ -8,6 +8,6 @@ export default class Counter extends Component {
 	}
 	
 	render(): IComponentText {
-		return Verve.createText({value: this.props.value});
+		return createText({value: this.props.value});
 	}
 }

@@ -1,7 +1,7 @@
 import Component from '../verve/Component';
 import Counter from './components/Counter/Counter';
 import Button from './components/Button/Button';
-import Verve from '../verve/Verve';
+import { createNode, createStore } from '../verve/Verve';
 import Switcher from './components/Switcher/Switcher';
 import Form from './components/Form/Form';
 import {IComponentNode, IProps, IStore} from '../verve/interfaces';
@@ -16,7 +16,7 @@ export default class App extends Component {
 	constructor(props: IProps) {
 		super(props);
 		
-		this.store = Verve.createStore({
+		this.store = createStore({
 			count: 0,
 		});
 		
@@ -32,7 +32,7 @@ export default class App extends Component {
 	}
 	
 	render(): IComponentNode {
-		return Verve.createNode({
+		return createNode({
 			tagName: 'div',
 			attributes: {
 				class: 'App',
